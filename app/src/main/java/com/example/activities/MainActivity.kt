@@ -1,23 +1,25 @@
 package com.example.activities
 
+import android.content.Intent
 import android.net.Uri
-import android.os.AsyncTask
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Toast
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import timber.log.Timber
 import java.net.HttpURLConnection
 import java.net.URL
 
-class MainActivity : AppCompatActivity() {
+interface ICellClickListener{
+    fun onCellClickListener(link: String)
+}
+class MainActivity : AppCompatActivity(), ICellClickListener {
     private lateinit var RView: RecyclerView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,7 +38,8 @@ class MainActivity : AppCompatActivity() {
 
             withContext(Dispatchers.Main) {
                 if (RView.context != null) {
-                    RView.adapter = ImageAdapter(RView.context, wrapper.photos.photo);
+                    RView.adapter = ImageAdapter(RView.context, wrapper.photos.photo,
+                        this@MainActivity);
                 }
             }
         }
@@ -56,6 +59,13 @@ class MainActivity : AppCompatActivity() {
         val wrapper: Wrapper = gson.fromJson(text, Wrapper::class.java)
 
         return wrapper
+    }
+
+    override fun onCellClickListener(link: String) {
+        Toast.makeText(this, "Добавлено в избранное", Toast.LENGTH_SHORT).show()
+        val newIntent = Intent(this, PictureActivity::class.java)
+        newIntent.putExtra("picLink", link)
+        startActivity(newIntent)
     }
 }
 

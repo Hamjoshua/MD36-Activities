@@ -1,8 +1,5 @@
 package com.example.activities
 
-import android.R.attr.label
-import android.R.attr.text
-import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.view.LayoutInflater
@@ -13,10 +10,12 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import kotlinx.coroutines.CoroutineScope
 
 
 class ImageAdapter(private val context: Context,
-                   private val list: ArrayList<Photo>) :
+                   private val list: ArrayList<Photo>,
+                   private val listener: ICellClickListener) :
     RecyclerView.Adapter<ImageAdapter.ViewHolder>(){
     class ViewHolder(view: View): RecyclerView.ViewHolder(view){
         val imageView = itemView.findViewById<ImageView>(R.id.rImage)
@@ -34,11 +33,7 @@ class ImageAdapter(private val context: Context,
         val photo = list[position];
         Glide.with(context).load(photo.getUri()).into((holder.imageView))
         holder.imageView.setOnClickListener{
-            val clipboardManager = context.getSystemService(Context.CLIPBOARD_SERVICE)
-                    as ClipboardManager
-            val clipData = ClipData.newPlainText("Copied Text", photo.getUri().toString())
-            clipboardManager.setPrimaryClip(clipData)
-            Toast.makeText(context, photo.getUri().toString(), Toast.LENGTH_SHORT).show()
+            listener.onCellClickListener(photo.getUri().toString())
         }
     }
 }
