@@ -16,6 +16,8 @@ class PictureActivity : AppCompatActivity() {
         val link: String = this.intent.getStringExtra("picLink").toString();
         val imageView: ImageView = findViewById(R.id.picView);
         Glide.with(this).load(link).into(imageView)
+
+        setSupportActionBar(findViewById(R.id.toolbar));
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -26,6 +28,11 @@ class PictureActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         // Handle action bar item clicks here.
         val id = item.getItemId()
+
+        if (id == R.id.toolbar){
+            Toast.makeText(this, "Мнюшка", Toast.LENGTH_SHORT).show()
+            return true
+        }
 
         if (id == R.id.heart_action) {
             Toast.makeText(this, "Добавлено в избранное", Toast.LENGTH_SHORT).show()
