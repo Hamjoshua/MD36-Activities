@@ -62,7 +62,6 @@ class MainActivity : AppCompatActivity(), ICellClickListener {
     }
 
     override fun onCellClickListener(link: String) {
-        Toast.makeText(this, "Добавлено в избранное", Toast.LENGTH_SHORT).show()
         val newIntent = Intent(this, PictureActivity::class.java)
         newIntent.putExtra("picLink", link)
         startActivity(newIntent)
