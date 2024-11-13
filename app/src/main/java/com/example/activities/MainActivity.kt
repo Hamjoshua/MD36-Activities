@@ -2,11 +2,13 @@ package com.example.activities
 
 import android.content.Intent
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -45,6 +47,22 @@ class MainActivity : AppCompatActivity(), ICellClickListener {
         }
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        Toast.makeText(this, "Добавлено в избранное", Toast.LENGTH_SHORT).show()
+        if(resultCode == RESULT_OK){
+            val picLink = data?.getStringExtra("picLink")
+            val snackbar: Snackbar = Snackbar.make(findViewById(R.id.main),
+                "Добавлено в избранные", Snackbar.LENGTH_LONG);
+            snackbar.setAction("OPEN", View.OnClickListener {
+                val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(picLink))
+                startActivity(browserIntent)
+            })
+            snackbar.show()
+        }
+
+    }
+
     fun loadImages(): Wrapper{
         val link = "https://api.flickr.com/services/rest/" +
                 "?method=flickr.photos.search&api_key" +
@@ -63,7 +81,7 @@ class MainActivity : AppCompatActivity(), ICellClickListener {
 
     override fun onCellClickListener(link: String) {
         val newIntent = Intent(this, PictureActivity::class.java)
-        newIntent.putExtra("picLink", link)
+        PictureActivity.PIC_LINK = link
         startActivity(newIntent)
     }
 }
