@@ -40,7 +40,7 @@ class MainActivity : AppCompatActivity(), ICellClickListener {
 
             withContext(Dispatchers.Main) {
                 if (RView.context != null) {
-                    RView.adapter = ImageAdapter(RView.context, wrapper.photos.photo,
+                    RView.adapter = ImageAdapter(wrapper.photos.photo,
                         this@MainActivity);
                 }
             }
@@ -49,11 +49,10 @@ class MainActivity : AppCompatActivity(), ICellClickListener {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        Toast.makeText(this, "Добавлено в избранное", Toast.LENGTH_SHORT).show()
         if(resultCode == RESULT_OK){
             val picLink = data?.getStringExtra("picLink")
             val snackbar: Snackbar = Snackbar.make(findViewById(R.id.main),
-                "Добавлено в избранные", Snackbar.LENGTH_LONG);
+                "Добавлено в избранные", Snackbar.LENGTH_LONG)
             snackbar.setAction("OPEN", View.OnClickListener {
                 val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(picLink))
                 startActivity(browserIntent)
@@ -82,7 +81,7 @@ class MainActivity : AppCompatActivity(), ICellClickListener {
     override fun onCellClickListener(link: String) {
         val newIntent = Intent(this, PictureActivity::class.java)
         PictureActivity.PIC_LINK = link
-        startActivity(newIntent)
+        startActivityForResult(newIntent, 1)
     }
 }
 
